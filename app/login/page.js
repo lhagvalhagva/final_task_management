@@ -88,6 +88,12 @@ const LoginPage = () => {
       <p style={{ textAlign: "center" }}>
         Don&apos;t have an account? <Link href="../register">Register</Link>
       </p>
+      <p style={{ textAlign: "left" }}>
+        {" nvvr lvv butsah  ==> "}
+        <Link href="/" style={{ color: "blue" }}>
+          HOME
+        </Link>
+      </p>
     </div>
   );
 };

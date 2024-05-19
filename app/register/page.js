@@ -79,6 +79,12 @@ export default function RegisterPage() {
       <p style={{ textAlign: "center" }}>
         Already have an account? <Link href="../login">Login</Link>
       </p>
+      <p style={{ textAlign: "left" }}>
+        {" nvvr lvv butsah  ==>"}
+        <Link href="/" style={{ color: "blue" }}>
+          HOME
+        </Link>
+      </p>
     </div>
   );
 }
