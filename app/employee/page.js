@@ -1,64 +1,68 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import './employee.css';
 
 export default function EmployeePage() {
   const [tasks, setTasks] = useState([]);
+  const [employeeTasks, setEmployeeTasks] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {
-    // Fetch tasks data from an API or any other source
-    // For demonstration, I'll use static data here
-    const sampleTasks = [
-      { id: 1, customer: "John Doe", taskName: "Task 1", status: "Pending" },
-      {
-        id: 2,
-        customer: "Jane Smith",
-        taskName: "Task 2",
-        status: "Completed",
-      },
-      // Add more tasks as needed
-    ];
-    setTasks(sampleTasks);
+    // Fetch all tasks for employees from your API or data source
+    // For demonstration, using sample data here
+    const allEmployeeTasks = {
+      "JohnDoe": [
+        { id: 1, customer: "John Doe", taskName: "Task 1", status: "Pending" },
+        { id: 2, customer: "John Doe", taskName: "Task 2", status: "Completed" },
+      ],
+      "JaneSmith": [
+        { id: 3, customer: "Jane Smith", taskName: "Task 3", status: "Pending" },
+        { id: 4, customer: "Jane Smith", taskName: "Task 4", status: "Completed" },
+      ],
+      // Add more employees and their tasks as needed
+    };
+    setEmployeeTasks(allEmployeeTasks);
   }, []);
 
+  const handleEmployeeChange = (employeeName) => {
+    setSelectedEmployee(employeeName);
+    setTasks(employeeTasks[employeeName]);
+  };
+
   const handleTaskStatusChange = (taskId, newStatus) => {
-    // Update the status of the task with the provided taskId
     const updatedTasks = tasks.map((task) =>
       task.id === taskId ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
+    // Update tasks for the selected employee in the state
+    setEmployeeTasks({
+      ...employeeTasks,
+      [selectedEmployee]: updatedTasks
+    });
   };
 
   return (
     <div className="wrapper">
       <h2 style={{ marginBottom: "20px" }}>Tasks</h2>
+      <div className="employee-selector">
+        <select onChange={(e) => handleEmployeeChange(e.target.value)}>
+          <option value="">Select Employee</option>
+          {Object.keys(employeeTasks).map((employee) => (
+            <option key={employee} value={employee}>{employee}</option>
+          ))}
+        </select>
+      </div>
       <ul className="task-list">
         {tasks.map((task) => (
-          <li
-            key={task.id}
-            style={{
-              marginBottom: "10px",
-              padding: "10px",
-              backgroundColor: "#f4f4f4",
-              borderRadius: "5px",
-            }}
-          >
-            <span style={{ marginRight: "20px" }}>{task.customer}</span>
-            <span style={{ marginRight: "20px" }}>{task.taskName}</span>
-            <span style={{ marginRight: "20px", textTransform: "capitalize" }}>
-              {task.status}
-            </span>
+          <li key={task.id}>
+            <span>{task.customer}</span>
+            <span>{task.taskName}</span>
+            <span style={{ textTransform: "capitalize" }}>{task.status}</span>
             {/* Button to change task status */}
             {task.status === "Pending" && (
               <button
-                style={{
-                  padding: "5px 10px",
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
+                className="mark-completed"
                 onClick={() => handleTaskStatusChange(task.id, "Completed")}
               >
                 Mark as Completed
@@ -66,14 +70,7 @@ export default function EmployeePage() {
             )}
             {task.status === "Completed" && (
               <button
-                style={{
-                  padding: "5px 10px",
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
+                className="mark-pending"
                 onClick={() => handleTaskStatusChange(task.id, "Pending")}
               >
                 Mark as Pending
