@@ -4,8 +4,6 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("customer");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -13,18 +11,18 @@ export default function RegisterPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch('../api/register', {
+      const response = await fetch('../api/select_client', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, userType }),
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess("Registration successful!");
+        setSuccess("Client added successfully!");
         setError("");
       } else {
         setError(data.error);
@@ -55,39 +53,6 @@ export default function RegisterPage() {
             required
           />
         </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="password" style={{ display: "block" }}>
-            Password:
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", padding: "10px" }}
-            required
-          />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label style={{ marginRight: "10px" }}>
-            <input
-              type="radio"
-              value="customer"
-              checked={userType === "customer"}
-              onChange={() => setUserType("customer")}
-            />
-            &nbsp;Customer
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="employee"
-              checked={userType === "employee"}
-              onChange={() => setUserType("employee")}
-            />
-            &nbsp;Employee
-          </label>
-        </div>
         <button
           type="submit"
           style={{
@@ -102,15 +67,6 @@ export default function RegisterPage() {
           Register
         </button>
       </form>
-      <p style={{ textAlign: "center" }}>
-        Already have an account? <Link href="../login">Login</Link>
-      </p>
-      <p style={{ textAlign: "left" }}>
-        {" nvvr lvv butsah  ==>"}
-        <Link href="/" style={{ color: "blue" }}>
-          HOME
-        </Link>
-      </p>
     </div>
   );
 }
