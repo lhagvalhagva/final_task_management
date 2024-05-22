@@ -11,7 +11,7 @@ export default function RegisterPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch('../api/select_client', {
+      const response = await fetch('../api/data', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
