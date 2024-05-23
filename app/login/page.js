@@ -176,7 +176,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p style={styles.footer}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="../register" style={styles.link}>
             Бүртгүүлэх
           </Link>
