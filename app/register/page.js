@@ -6,6 +6,11 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("customer");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
+  const [position, setPosition] = useState("");
+  const [division, setDivision] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -13,12 +18,19 @@ export default function RegisterPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch('../api/data', {
-        method: 'POST',
+      const response = await fetch("../api/data", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password, userType }),
+        body: JSON.stringify({
+          email,
+          password,
+          userType,
+          phoneNumber,
+          fName,
+          ...(userType === "employee" && { position, division, lname }),
+        }),
       });
 
       const data = await response.json();
@@ -40,12 +52,12 @@ export default function RegisterPage() {
     <div style={{ maxWidth: "400px", margin: "0 auto" }}>
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Register</h2>
       {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-      {success && <p style={{ color: "green", textAlign: "center" }}>{success}</p>}
+      {success && (
+        <p style={{ color: "green", textAlign: "center" }}>{success}</p>
+      )}
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="email" style={{ display: "block" }}>
-            Email:
-          </label>
+          <label htmlFor="email">Email:</label>
           <input
             type="email"
             id="email"
@@ -55,10 +67,33 @@ export default function RegisterPage() {
             required
           />
         </div>
+
         <div style={{ marginBottom: "15px" }}>
-          <label htmlFor="password" style={{ display: "block" }}>
-            Password:
-          </label>
+          <label htmlFor="phone_number">Phone number:</label>
+          <input
+            type="tel"
+            id="phone_number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="fName">First Name:</label>
+          <input
+            type="text"
+            id="fName"
+            value={fName}
+            onChange={(e) => setFName(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "15px" }}>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
@@ -68,6 +103,45 @@ export default function RegisterPage() {
             required
           />
         </div>
+
+        {userType === "employee" && (
+          <>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="lName">Last Name:</label>
+              <input
+                type="text"
+                id="lName"
+                value={lName}
+                onChange={(e) => setLName(e.target.value)}
+                style={{ width: "100%", padding: "10px" }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="position">Position:</label>
+              <input
+                type="text"
+                id="position"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                style={{ width: "100%", padding: "10px" }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="division">Division:</label>
+              <input
+                type="text"
+                id="division"
+                value={division}
+                onChange={(e) => setDivision(e.target.value)}
+                style={{ width: "100%", padding: "10px" }}
+                required
+              />
+            </div>
+          </>
+        )}
+
         <div style={{ marginBottom: "15px" }}>
           <label style={{ marginRight: "10px" }}>
             <input
@@ -88,6 +162,7 @@ export default function RegisterPage() {
             &nbsp;Employee
           </label>
         </div>
+
         <button
           type="submit"
           style={{
@@ -102,11 +177,12 @@ export default function RegisterPage() {
           Register
         </button>
       </form>
+
       <p style={{ textAlign: "center" }}>
         Already have an account? <Link href="../login">Login</Link>
       </p>
       <p style={{ textAlign: "left" }}>
-        {" nvvr lvv butsah  ==>"}
+        {"nvvr lvv butsah  ==>"}
         <Link href="/" style={{ color: "blue" }}>
           HOME
         </Link>

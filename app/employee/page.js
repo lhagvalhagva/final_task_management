@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import './employee.css';
+import "./employee.css";
 
 export default function EmployeePage() {
   const [tasks, setTasks] = useState([]);
@@ -12,13 +12,28 @@ export default function EmployeePage() {
     // Fetch all tasks for employees from your API or data source
     // For demonstration, using sample data here
     const allEmployeeTasks = {
-      "JohnDoe": [
+      JohnDoe: [
         { id: 1, customer: "John Doe", taskName: "Task 1", status: "Pending" },
-        { id: 2, customer: "John Doe", taskName: "Task 2", status: "Completed" },
+        {
+          id: 2,
+          customer: "John Doe",
+          taskName: "Task 2",
+          status: "Completed",
+        },
       ],
-      "JaneSmith": [
-        { id: 3, customer: "Jane Smith", taskName: "Task 3", status: "Pending" },
-        { id: 4, customer: "Jane Smith", taskName: "Task 4", status: "Completed" },
+      JaneSmith: [
+        {
+          id: 3,
+          customer: "Jane Smith",
+          taskName: "Task 3",
+          status: "Pending",
+        },
+        {
+          id: 4,
+          customer: "Jane Smith",
+          taskName: "Task 4",
+          status: "Completed",
+        },
       ],
       // Add more employees and their tasks as needed
     };
@@ -38,7 +53,7 @@ export default function EmployeePage() {
     // Update tasks for the selected employee in the state
     setEmployeeTasks({
       ...employeeTasks,
-      [selectedEmployee]: updatedTasks
+      [selectedEmployee]: updatedTasks,
     });
   };
 
@@ -49,7 +64,9 @@ export default function EmployeePage() {
         <select onChange={(e) => handleEmployeeChange(e.target.value)}>
           <option value="">Select Employee</option>
           {Object.keys(employeeTasks).map((employee) => (
-            <option key={employee} value={employee}>{employee}</option>
+            <option key={employee} value={employee}>
+              {employee}
+            </option>
           ))}
         </select>
       </div>

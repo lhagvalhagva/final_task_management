@@ -1,4 +1,5 @@
 "use client";
+"use strict";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -10,88 +11,102 @@ const LoginPage = () => {
   const [userType, setUserType] = useState("customer");
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login with:", email, password, userType);
-
-    if (userType === "customer") {
-      router.push("../customer");
-    } else {
-      router.push("../employee");
+    try {
+      const response = await fetch("../api/data2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, userType }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        if (userType === "customer") {
+          router.push("../customer");
+        } else {
+          router.push("../employee");
+        }
+      } else {
+        console.error(data.error);
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
     }
   };
 
   const styles = {
     container: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      background: 'linear-gradient(to left, rgb(241, 227, 248), #fff)',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "100vh",
+      background: "linear-gradient(to left, rgb(241, 227, 248), #fff)",
     },
     card: {
-      background: '#fff',
-      padding: '40px',
-      maxWidth: '400px',
-      width: '100%',
-      borderRadius: '8px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-      textAlign: 'center',
+      background: "#fff",
+      padding: "40px",
+      maxWidth: "400px",
+      width: "100%",
+      borderRadius: "8px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      textAlign: "center",
     },
     title: {
-      marginBottom: '20px',
-      fontSize: '24px',
-      color: '#333',
+      marginBottom: "20px",
+      fontSize: "24px",
+      color: "#333",
     },
     form: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '15px',
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
     },
     formGroup: {
-      textAlign: 'left',
+      textAlign: "left",
     },
     label: {
-      display: 'block',
-      marginBottom: '5px',
-      color: '#555',
+      display: "block",
+      marginBottom: "5px",
+      color: "#555",
     },
     input: {
-      padding: '10px',
-      width: '100%',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      transition: 'all 0.3s ease',
+      padding: "10px",
+      width: "100%",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      transition: "all 0.3s ease",
     },
     inputFocus: {
-      borderColor: '#89B4FF',
-      boxShadow: '0 0 5px rgba(0, 123, 255, 0.5)',
+      borderColor: "#89B4FF",
+      boxShadow: "0 0 5px rgba(0, 123, 255, 0.5)",
     },
     radioGroup: {
-      display: 'flex',
-      justifyContent: 'center',
-      gap: '20px',
+      display: "flex",
+      justifyContent: "center",
+      gap: "20px",
     },
     button: {
-      padding: '10px',
-      width: '100%',
-      backgroundColor: '#89B4FF',
-      color: '#fff',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s ease',
+      padding: "10px",
+      width: "100%",
+      backgroundColor: "#89B4FF",
+      color: "#fff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      transition: "background-color 0.3s ease",
     },
     buttonHover: {
-      backgroundColor: '#0056b3',
+      backgroundColor: "#0056b3",
     },
     footer: {
-      marginTop: '20px',
-      color: '#555',
+      marginTop: "20px",
+      color: "#555",
     },
     link: {
-      color: '#99CCFF',
-      textDecoration: 'none',
+      color: "#99CCFF",
+      textDecoration: "none",
     },
   };
 
@@ -101,7 +116,9 @@ const LoginPage = () => {
         <h2 style={styles.title}>Нэвтрэх</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>Email:</label>
+            <label htmlFor="email" style={styles.label}>
+              Email:
+            </label>
             <input
               type="email"
               id="email"
@@ -112,7 +129,9 @@ const LoginPage = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Password:</label>
+            <label htmlFor="password" style={styles.label}>
+              Password:
+            </label>
             <input
               type="password"
               id="password"
@@ -145,17 +164,27 @@ const LoginPage = () => {
           <button
             type="submit"
             style={styles.button}
-            onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
-            onMouseLeave={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
+            onMouseEnter={(e) =>
+              (e.target.style.backgroundColor =
+                styles.buttonHover.backgroundColor)
+            }
+            onMouseLeave={(e) =>
+              (e.target.style.backgroundColor = styles.button.backgroundColor)
+            }
           >
             Login
           </button>
         </form>
         <p style={styles.footer}>
-          Don't have an account? <Link href="../register" style={styles.link}>Бүртгүүлэх</Link>
+          Don't have an account?{" "}
+          <Link href="../register" style={styles.link}>
+            Бүртгүүлэх
+          </Link>
         </p>
         <p style={styles.footer}>
-          <Link href="/" style={styles.link}>Буцах</Link>
+          <Link href="/" style={styles.link}>
+            Буцах
+          </Link>
         </p>
       </div>
     </div>
