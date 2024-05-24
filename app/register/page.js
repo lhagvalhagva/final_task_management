@@ -29,7 +29,7 @@ export default function RegisterPage() {
           userType,
           phoneNumber,
           fName,
-          ...(userType === "employee" && { position, division, lname }),
+          ...(userType === "employee" && { position, lName }),
         }),
       });
 
@@ -45,6 +45,7 @@ export default function RegisterPage() {
     } catch (error) {
       setError("An unexpected error occurred");
       setSuccess("");
+      console.log("not working", error);
     }
   };
 
@@ -56,7 +57,7 @@ export default function RegisterPage() {
         <p style={{ color: "green", textAlign: "center" }}>{success}</p>
       )}
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: "15px" ,color: "black"}}>
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -68,7 +69,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: "15px" ,color: "black"}}>
           <label htmlFor="phone_number">Phone number:</label>
           <input
             type="tel"
@@ -80,7 +81,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: "15px" ,color: "black"}}>
           <label htmlFor="fName">First Name:</label>
           <input
             type="text"
@@ -92,7 +93,7 @@ export default function RegisterPage() {
           />
         </div>
 
-        <div style={{ marginBottom: "15px" }}>
+        <div style={{ marginBottom: "15px" ,color: "black"}}>
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -106,7 +107,7 @@ export default function RegisterPage() {
 
         {userType === "employee" && (
           <>
-            <div style={{ marginBottom: "15px" }}>
+            <div style={{ marginBottom: "15px" ,color: "black"}}>
               <label htmlFor="lName">Last Name:</label>
               <input
                 type="text"
@@ -117,7 +118,7 @@ export default function RegisterPage() {
                 required
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
+            <div style={{ marginBottom: "15px" ,color: "black"}}>
               <label htmlFor="position">Position:</label>
               <input
                 type="text"

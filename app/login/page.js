@@ -14,7 +14,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("../api/data2", {
+      const response = await fetch("/api/data2", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const LoginPage = () => {
     label: {
       display: "block",
       marginBottom: "5px",
-      color: "#555",
+      color: "black",
     },
     input: {
       padding: "10px",
