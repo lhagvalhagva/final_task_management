@@ -11,31 +11,6 @@ const LoginPage = () => {
   const [userType, setUserType] = useState("customer");
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/data2", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, userType }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        if (userType === "customer") {
-          router.push("../customer");
-        } else {
-          router.push("../employee");
-        }
-      } else {
-        console.error(data.error);
-      }
-    } catch (error) {
-      console.error("An unexpected error occurred:", error);
-    }
-  };
-
   const styles = {
     container: {
       display: "flex",
@@ -108,6 +83,35 @@ const LoginPage = () => {
       color: "#99CCFF",
       textDecoration: "none",
     },
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, userType }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      const data = await res.json();
+
+      if (userType === "customer") {
+        router.push("../customer");
+      } else {
+        router.push("../employee");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert(`An error occurred: ${error.message}`);
+    }
   };
 
   return (
