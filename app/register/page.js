@@ -123,12 +123,99 @@ export default function RegisterPage() {
   };
 
   return (
+<<<<<<< HEAD
 <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>Бүртгүүлэх</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
             <label htmlFor="fName" style={styles.label}>First Name:</label>
+=======
+    <div style={{ maxWidth: "400px", margin: "0 auto" }}>
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Register</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+      {success && (
+        <p style={{ color: "green", textAlign: "center" }}>{success}</p>
+      )}
+      <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
+        <div style={{ marginBottom: "15px", color: "black" }}>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "15px", color: "black" }}>
+          <label htmlFor="phone_number">Phone number:</label>
+          <input
+            type="tel"
+            id="phone_number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "15px", color: "black" }}>
+          <label htmlFor="fName">First Name:</label>
+          <input
+            type="text"
+            id="fName"
+            value={fName}
+            onChange={(e) => setFName(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        <div style={{ marginBottom: "15px", color: "black" }}>
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ width: "100%", padding: "10px" }}
+            required
+          />
+        </div>
+
+        {userType === "employee" && (
+          <>
+            <div style={{ marginBottom: "15px", color: "black" }}>
+              <label htmlFor="lName">Last Name:</label>
+              <input
+                type="text"
+                id="lName"
+                value={lName}
+                onChange={(e) => setLName(e.target.value)}
+                style={{ width: "100%", padding: "10px" }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: "15px", color: "black" }}>
+              <label htmlFor="position">Position:</label>
+              <input
+                type="text"
+                id="position"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                style={{ width: "100%", padding: "10px" }}
+                required
+              />
+            </div>
+          </>
+        )}
+
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ marginRight: "10px" }}>
+>>>>>>> b2ed5b1503c83d9120a6b6a9cbdf115eaa7c8d42
             <input
               type="text"
               id="fName"
