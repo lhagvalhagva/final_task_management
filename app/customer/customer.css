@@ -1,6 +1,6 @@
 body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background-color: #f8f9fa;
+  background: linear-gradient(to left, rgb(241, 227, 248), #fff);
   display: flex;
   justify-content: center;
   align-items: center;
