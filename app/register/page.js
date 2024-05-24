@@ -1,14 +1,15 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { StyleRegistry } from "styled-jsx";
 
 export default function RegisterPage() {
-  const [fName, setFName] = useState("");
-  const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("customer");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
   const [position, setPosition] = useState("");
   const [division, setDivision] = useState("");
   const [error, setError] = useState("");
@@ -108,6 +109,7 @@ export default function RegisterPage() {
       borderRadius: '4px',
       cursor: 'pointer',
       transition: 'background-color 0.3s ease',
+      marginTop: '20px',
     },
     buttonHover: {
       backgroundColor: '#0056b3',
@@ -123,37 +125,41 @@ export default function RegisterPage() {
   };
 
   return (
-<div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Бүртгүүлэх</h2>
-        <form onSubmit={handleSubmit} style={styles.form}>
+    <div style={styles.container}>
+    <div style={styles.card}>
+      <h2 style={styles.title}>Бүртгүүлэх</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+      {success && (
+        <p style={{ color: "green", textAlign: "center" }}>{success}</p>
+      )}
+      <form onSubmit={handleSubmit} style={styles.from}>
           <div style={styles.formGroup}>
-            <label htmlFor="fName" style={styles.label}>First Name:</label>
+            <label htmlFor="firstName" style={styles.label}>First Name:</label>
             <input
               type="text"
-              id="fName"
+              id="firstName"
               value={fName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => setFName(e.target.value)}
               style={styles.input}
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="lName" style={styles.label}>Last Name:</label>
+            <label htmlFor="lastName" style={styles.label}>Last Name:</label>
             <input
               type="text"
-              id="lName"
+              id="lastName"
               value={lName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => setLName(e.target.value)}
               style={styles.input}
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="phone_number" style={styles.label}>Phone Number:</label>
+            <label htmlFor="phoneNumber" style={styles.label}>Phone Number:</label>
             <input
               type="tel"
-              id="phone_number"
+              id="phoneNumber"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               style={styles.input}
@@ -171,44 +177,35 @@ export default function RegisterPage() {
               required
             />
           </div>
-          <div style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-              required
-            />
-          </div>
-          {/* <div style={styles.formGroup}>
-            <label htmlFor="position" style={styles.label}>Position:</label>
-            <input
-              type="text"
-              id="position"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-              style={styles.input}
-              required
-            />
-          </div> */}
-          <button
-            type="submit"
-            style={styles.button}
-            onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
-            onMouseLeave={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
-          >
-            Save
-          </button>
-        </form>
-        <p style={styles.footer}>
-          Already have an account? <Link href="../login" style={styles.link}>Нэвтрэх</Link>
-        </p>
-        <p style={styles.footer}>
-          <Link href="/" style={styles.link}>Буцах</Link>
-        </p>
+          <div  style={styles.formGroup}>
+              <label htmlFor="password"  style={styles.label}>Password:</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+                required
+              />
+            </div>
+        
+        <button type="submit" style={styles.button}
+        onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
+        onMouseLeave={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
+      >
+        Save
+        </button>
+      </form>
+
+      <p style={styles.footer }>
+        Already have an account? <Link href="../login" style= {styles.link}>Нэвтрэх</Link>
+      </p>
+      <p style={styles.footer}>
+        <Link href="/" style={styles.link}>
+          Буцах
+        </Link>
+      </p>
       </div>
-    </div>
+   </div>
   );
-};
+}
