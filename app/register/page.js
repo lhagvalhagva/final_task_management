@@ -1,34 +1,53 @@
 "use client";
-
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-const RegisterPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+export default function RegisterPage() {
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
   const [userType, setUserType] = useState("customer");
-  const router = useRouter();
+  const [position, setPosition] = useState("");
+  const [division, setDivision] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== repeatPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
-    console.log("Register with:", firstName, lastName, phoneNumber, email, password, userType);
-    // Perform registration logic here
-    if (userType === "customer") {
-      router.push("../customer");
-    } else {
-      router.push("../employee");
+
+    try {
+      const response = await fetch("../api/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          userType,
+          phoneNumber,
+          fName,
+          ...(userType === "employee" && { position, lName }),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess("Registration successful!");
+        setError("");
+      } else {
+        setError(data.error);
+        setSuccess("");
+      }
+    } catch (error) {
+      setError("An unexpected error occurred");
+      setSuccess("");
+      console.log("not working", error);
     }
   };
-
   const styles = {
     container: {
       display: 'flex',
@@ -104,37 +123,37 @@ const RegisterPage = () => {
   };
 
   return (
-    <div style={styles.container}>
+<div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>Бүртгүүлэх</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>
-            <label htmlFor="firstName" style={styles.label}>First Name:</label>
+            <label htmlFor="fName" style={styles.label}>First Name:</label>
             <input
               type="text"
-              id="firstName"
-              value={firstName}
+              id="fName"
+              value={fName}
               onChange={(e) => setFirstName(e.target.value)}
               style={styles.input}
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="lastName" style={styles.label}>Last Name:</label>
+            <label htmlFor="lName" style={styles.label}>Last Name:</label>
             <input
               type="text"
-              id="lastName"
-              value={lastName}
+              id="lName"
+              value={lName}
               onChange={(e) => setLastName(e.target.value)}
               style={styles.input}
               required
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="phoneNumber" style={styles.label}>Phone Number:</label>
+            <label htmlFor="phone_number" style={styles.label}>Phone Number:</label>
             <input
               type="tel"
-              id="phoneNumber"
+              id="phone_number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
               style={styles.input}
@@ -164,12 +183,12 @@ const RegisterPage = () => {
             />
           </div>
           <div style={styles.formGroup}>
-            <label htmlFor="repeatPassword" style={styles.label}>Repeat Password:</label>
+            <label htmlFor="position" style={styles.label}>Position:</label>
             <input
-              type="password"
-              id="repeatPassword"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
+              type="text"
+              id="position"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
               style={styles.input}
               required
             />
@@ -180,18 +199,16 @@ const RegisterPage = () => {
             onMouseEnter={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
             onMouseLeave={(e) => e.target.style.backgroundColor = styles.button.backgroundColor}
           >
-            Register
+            Save
           </button>
         </form>
         <p style={styles.footer}>
-          Already have an account? <Link href="../login" style={styles.link}>Login</Link>
+          Already have an account? <Link href="../login" style={styles.link}>Нэвтрэх</Link>
         </p>
         <p style={styles.footer}>
-          <Link href="/" style={styles.link}>Home</Link>
+          <Link href="/" style={styles.link}>Буцах</Link>
         </p>
       </div>
     </div>
   );
 };
-
-export default RegisterPage;
