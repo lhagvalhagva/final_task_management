@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
-    const result = await sql`SELECT * FROM test;`;
+    const result = await sql`SELECT * FROM clients;`;
     return NextResponse.json({ result: result.rows }, { status: 200 });
   } catch (error) {
     console.error("GET request error:", error);
@@ -14,14 +14,14 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, userType, phoneNumber, fName, lName, position, division } = body;
+    const { email, password, userType, phoneNumber, fName, lName, position } = body;
 
     let result;
 
     if (userType === 'employee') {
       result = await sql`
         INSERT INTO employees (fName, lName, position, phoneNo, division, password,email) 
-        VALUES (${fName}, ${lName}, ${position}, ${phoneNumber}, ${parseInt(division, 10)}, ${password},${email})
+        VALUES (${fName}, ${lName}, ${position}, ${phoneNumber}, ${password},${email})
         RETURNING *;
       `;
     } else if (userType === 'customer') {
