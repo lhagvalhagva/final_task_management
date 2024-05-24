@@ -128,17 +128,6 @@ export default function RegisterPage() {
                 required
               />
             </div>
-            <div style={{ marginBottom: "15px" }}>
-              <label htmlFor="division">Division:</label>
-              <input
-                type="text"
-                id="division"
-                value={division}
-                onChange={(e) => setDivision(e.target.value)}
-                style={{ width: "100%", padding: "10px" }}
-                required
-              />
-            </div>
           </>
         )}
 

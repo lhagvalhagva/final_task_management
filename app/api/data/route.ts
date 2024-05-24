@@ -20,8 +20,8 @@ export async function POST(request: Request) {
 
     if (userType === 'employee') {
       result = await sql`
-        INSERT INTO employees (fName, lName, position, phoneNo, division, password,email) 
-        VALUES (${fName}, ${lName}, ${position}, ${phoneNumber}, ${parseInt(division, 10)}, ${password},${email})
+        INSERT INTO employees (fName, lName, position, phoneNo, password,email) 
+        VALUES (${fName}, ${lName}, ${position}, ${phoneNumber},${password},${email})
         RETURNING *;
       `;
     } else if (userType === 'customer') {

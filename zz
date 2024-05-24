@@ -1,0 +1,53 @@
+CREATE TABLE clients (
+  clientID SERIAL PRIMARY KEY,
+  email VARCHAR(45)  UNIQUE,
+  phoneNo CHAR(8)  UNIQUE,
+  clientName VARCHAR(45) ,
+  password VARCHAR(20)  UNIQUE
+);
+
+
+CREATE TABLE employeeprojects (
+  employeeID INT ,
+  projectID INT ,
+  logRecord VARCHAR(2000) ,
+  workedHours INT ,
+  PRIMARY KEY (employeeID, projectID),
+  CONSTRAINT employee_fk FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON UPDATE CASCADE,
+  CONSTRAINT project_fk FOREIGN KEY (projectID) REFERENCES projects (projectID) ON UPDATE CASCADE
+);
+
+
+CREATE TABLE employees (
+  employeeID SERIAL PRIMARY KEY,
+  email VARCHAR(45)  UNIQUE,
+  fName VARCHAR(45) ,
+  lName VARCHAR(45) ,
+  position VARCHAR(45) ,
+  phoneNo CHAR(8)  UNIQUE,
+  password VARCHAR(20)
+);
+
+CREATE TABLE projects (
+  projectID SERIAL PRIMARY KEY,
+  projectName VARCHAR(45)  UNIQUE,
+  budget INT ,
+  startDate DATE ,
+  endDate DATE 
+);
+
+
+
+CREATE TABLE taskassignment (
+  taskID SERIAL PRIMARY KEY,
+  taskName VARCHAR(45) ,
+  employeeID INT ,
+  clientID INT ,
+  dueDate DATE ,
+  status VARCHAR(45) ,
+  projectID INT ,
+  logRecord VARCHAR(2000) ,
+  CONSTRAINT taskemployee_fk FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON UPDATE CASCADE,
+  CONSTRAINT taskclient_fk FOREIGN KEY (clientID) REFERENCES clients (clientID) ON UPDATE CASCADE,
+  CONSTRAINT taskproject_fk FOREIGN KEY (projectID) REFERENCES projects (projectID) ON UPDATE CASCADE
+);

@@ -1,19 +1,53 @@
 "use client";
-import { useState } from "react";
-import './customer.css';
-
-const employees = [
-  { name: "John Doe", position: "Manager", email: "john.doe@example.com" },
-  { name: "Jane Smith", position: "Developer", email: "jane.smith@example.com" },
-];
+import { useState, useEffect } from "react";
+import "./customer.css";
 
 export default function CustomerPage() {
+  const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [taskName, setTaskName] = useState("");
+  const [dueDate, setDueDate] = useState("");
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("All");
 
-  const handleAddTask = () => {
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await fetch("../api/employee");
+        if (!response.ok) {
+          throw new Error("Failed to fetch employees");
+        }
+        const data = await response.json();
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (selectedEmployee) {
+        try {
+          const response = await fetch(
+            `../api/addtask?employeeid=${selectedEmployee.id}`
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch tasks");
+          }
+          const data = await response.json();
+          setTasks(data);
+        } catch (error) {
+          console.error("Error fetching tasks:", error);
+        }
+      }
+    };
+
+    fetchTasks();
+  }, [selectedEmployee]);
+  const handleAddTask = async () => {
     if (!selectedEmployee) {
       alert("Please select an employee before adding a task!");
       return;
@@ -22,13 +56,37 @@ export default function CustomerPage() {
       alert("Task name cannot be empty!");
       return;
     }
+    if (dueDate.trim() === "") {
+      alert("Due date cannot be empty!");
+      return;
+    }
+
     const newTask = {
-      employee: selectedEmployee.name,
+      employee: selectedEmployee.lname,
       taskName: taskName,
+      dueDate: dueDate,
       status: "Pending",
     };
-    setTasks([...tasks, newTask]);
-    setTaskName("");
+
+    try {
+      const response = await fetch("../api/addtask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add task");
+      }
+
+      setTasks([...tasks, newTask]);
+      setTaskName("");
+      setDueDate("");
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
   const handleTaskStatusChange = (index, newStatus) => {
@@ -56,10 +114,20 @@ export default function CustomerPage() {
         <div className="employee-list">
           <h3>Select an Employee</h3>
           {employees.map((employee) => (
-            <div key={employee.name} className="employee-card" onClick={() => setSelectedEmployee(employee)}>
-              <p><strong>Name:</strong> {employee.name}</p>
-              <p><strong>Position:</strong> {employee.position}</p>
-              <p><strong>Email:</strong> {employee.email}</p>
+            <div
+              key={employee.email}
+              className="employee-card"
+              onClick={() => setSelectedEmployee(employee)}
+            >
+              <p>
+                <strong>Name:</strong> {employee.lname}
+              </p>
+              <p>
+                <strong>Position:</strong> {employee.position}
+              </p>
+              <p>
+                <strong>Email:</strong> {employee.email}
+              </p>
             </div>
           ))}
         </div>
@@ -67,10 +135,19 @@ export default function CustomerPage() {
         <div>
           <div className="employee-info">
             <h3>Employee Information</h3>
-            <p><strong>Name:</strong> {selectedEmployee.name}</p>
-            <p><strong>Position:</strong> {selectedEmployee.position}</p>
-            <p><strong>Email:</strong> {selectedEmployee.email}</p>
-            <button className="back-button" onClick={() => setSelectedEmployee(null)}>
+            <p>
+              <strong>Name:</strong> {selectedEmployee.lname}
+            </p>
+            <p>
+              <strong>Position:</strong> {selectedEmployee.position}
+            </p>
+            <p>
+              <strong>Email:</strong> {selectedEmployee.email}
+            </p>
+            <button
+              className="back-button"
+              onClick={() => setSelectedEmployee(null)}
+            >
               Back to Employee List
             </button>
           </div>
@@ -82,6 +159,12 @@ export default function CustomerPage() {
               className="input"
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
+            />
+            <input
+              type="date"
+              className="input"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
             />
             <button onClick={handleAddTask} className="add-button">
               Add Task
@@ -109,7 +192,11 @@ export default function CustomerPage() {
                 Completed
               </span>
             </div>
-            <button onClick={handleLogout} disabled={tasks.length > 0} className="logout-button">
+            <button
+              onClick={handleLogout}
+              disabled={tasks.length > 0}
+              className="logout-button"
+            >
               Log Out
             </button>
           </div>
@@ -119,6 +206,7 @@ export default function CustomerPage() {
               <li key={index} className="task-item">
                 <span className="task-name">{task.taskName}</span>
                 <span className="task-status">{task.status}</span>
+                <span className="task-due-date">{task.dueDate}</span>
                 <button
                   onClick={() => handleTaskStatusChange(index, "Pending")}
                   className="status-button"
