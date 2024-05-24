@@ -182,7 +182,7 @@ export default function RegisterPage() {
               required
             />
           </div>
-          <div style={styles.formGroup}>
+          {/* <div style={styles.formGroup}>
             <label htmlFor="position" style={styles.label}>Position:</label>
             <input
               type="text"
@@ -192,7 +192,7 @@ export default function RegisterPage() {
               style={styles.input}
               required
             />
-          </div>
+          </div> */}
           <button
             type="submit"
             style={styles.button}
