@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import "./employee.css";
+import NavBar from "../../components/NavBar"
 
 export default function EmployeePage() {
   const [tasks, setTasks] = useState([]);
@@ -60,6 +61,7 @@ export default function EmployeePage() {
 
   return (
     <div className="wrapper">
+      <NavBar/>
       <h2 style={{ marginBottom: "20px" }}>Tasks</h2>
       <div className="employee-selector">
         <select onChange={(e) => handleEmployeeChange(e.target.value)}>

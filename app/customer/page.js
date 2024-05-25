@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import "./customer.css";
+import NavBar from "../../components/NavBar"
 
 export default function CustomerPage() {
   const [employees, setEmployees] = useState([]);
@@ -110,6 +111,7 @@ export default function CustomerPage() {
 
   return (
     <div className="wrapper">
+      <NavBar/>
       {!selectedEmployee ? (
         <div className="employee-list">
           <h3>Select an Employee</h3>
