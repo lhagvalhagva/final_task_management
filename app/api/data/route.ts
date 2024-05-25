@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     } else if (userType === 'customer') {
       result = await sql`
         INSERT INTO clients (email, phoneNo, clientname, password) 
-        VALUES (${email}, ${phoneNumber}, ${fName + ' ' + lName}, ${password})
+        VALUES (${email}, ${phoneNumber}, ${fName }, ${password})
         RETURNING *;
       `;
     } else {
