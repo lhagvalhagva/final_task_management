@@ -1,0 +1,11 @@
+.main {
+    display: flex;
+    padding-top: 100px;
+    color: black;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    background-color: beige;
+}
