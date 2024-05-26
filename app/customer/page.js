@@ -199,7 +199,9 @@ export default function CustomerPage() {
               disabled={tasks.length > 0}
               className="logout-button"
             >
-              Log Out
+              <a href="../login" className="logout-link">
+                Log Out
+              </a>
             </button>
           </div>
 

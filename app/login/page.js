@@ -185,6 +185,7 @@ const LoginPage = () => {
             Бүртгүүлэх
           </Link>
         </p>
+
         <p style={styles.footer}>
           <Link href="/" style={styles.link}>
             Буцах

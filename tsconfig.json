@@ -23,7 +23,8 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/api/tasks.js"
+    "app/api/tasks.js",
+    "app/api/tasks/route.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -6,51 +6,31 @@ import NavBar from "../../components/NavBar"
 
 export default function EmployeePage() {
   const [tasks, setTasks] = useState([]);
-  const [employeeTasks, setEmployeeTasks] = useState([]);
+  const [employeeTasks, setEmployeeTasks] = useState({});
   const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {
-    const allEmployeeTasks = {
-      JohnDoe: [
-        {
-          id: 1,
-          customer: "John Doe",
-          taskName: "Task 1",
-          status: "Pending",
-        },
-        {
-          id: 2,
-          customer: "John Doe",
-          taskName: "Task 2",
-          status: "Completed",
-        },
-      ],
-      JaneSmith: [
-        {
-          id: 3,
-          customer: "Jane Smith",
-          taskName: "Task 3",
-          status: "Pending",
-        },
-        {
-          id: 4,
-          customer: "Jane Smith",
-          taskName: "Task 4",
-          status: "Completed",
-        },
-      ],
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch("/api/tasks");
+        const data = await response.json();
+        setEmployeeTasks(data);
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+      }
     };
-    setEmployeeTasks(allEmployeeTasks);
+
+    fetchTasks();
   }, []);
 
   const handleEmployeeChange = (employeeName) => {
     setSelectedEmployee(employeeName);
-    setTasks(employeeTasks[employeeName]);
+    setTasks(employeeTasks[employeeName] || []);
   };
 
   const handleTaskStatusChange = (taskId, newStatus) => {
     const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { ...task, status: newStatus } : task
+      task.taskID === taskId ? { ...task, status: newStatus } : task
     );
     setTasks(updatedTasks);
     setEmployeeTasks({
@@ -75,15 +55,14 @@ export default function EmployeePage() {
       </div>
       <ul className="task-list">
         {tasks.map((task) => (
-          <li key={task.id}>
+          <li key={task.taskID}>
             <span>{task.customer}</span>
             <span>{task.taskName}</span>
             <span style={{ textTransform: "capitalize" }}>{task.status}</span>
-            {/* Button to change task status */}
             {task.status === "Pending" && (
               <button
                 className="mark-completed"
-                onClick={() => handleTaskStatusChange(task.id, "Completed")}
+                onClick={() => handleTaskStatusChange(task.taskID, "Completed")}
               >
                 Mark as Completed
               </button>
@@ -91,7 +70,7 @@ export default function EmployeePage() {
             {task.status === "Completed" && (
               <button
                 className="mark-pending"
-                onClick={() => handleTaskStatusChange(task.id, "Pending")}
+                onClick={() => handleTaskStatusChange(task.taskID, "Pending")}
               >
                 Mark as Pending
               </button>
@@ -99,6 +78,11 @@ export default function EmployeePage() {
           </li>
         ))}
       </ul>
+      <button className="logout-button">
+        <a href="../login" className="logout-link">
+          Log Out
+        </a>
+      </button>
     </div>
   );
 }
