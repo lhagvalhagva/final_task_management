@@ -1,7 +1,6 @@
 'use client';
 
 import Navbar from "../../components/NavBar";
-import styles from "./about.css";
 
 export default function AboutPage() {
     return (
