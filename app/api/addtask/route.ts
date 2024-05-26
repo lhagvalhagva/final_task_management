@@ -13,6 +13,7 @@ export async function POST(request) {
     if (employeeResult.length === 0) {
         console.error("No employee found with the specified lname:", employee);
     }
+
     const employeeid = employeeResult[0];
 
     await sql`
