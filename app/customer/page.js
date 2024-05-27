@@ -1,13 +1,14 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import "./customer.css";
-import NavBar from "../../components/NavBar"
+import NavBar from "../../components/NavBar";
 
 export default function CustomerPage() {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [taskName, setTaskName] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [taskname, setTaskName] = useState("");
+  const [duedate, setDueDate] = useState("");
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState("All");
 
@@ -33,10 +34,10 @@ export default function CustomerPage() {
       if (selectedEmployee) {
         try {
           const response = await fetch(
-            `../api/addtask?employeeid=${selectedEmployee.id}`
+            "../api/tasks?employeeid=" + selectedEmployee.employeeid
           );
           if (!response.ok) {
-            throw new Error("Failed to fetch tasks");
+            throw new Error("Failed to fetch tasks for employee");
           }
           const data = await response.json();
           setTasks(data);
@@ -48,24 +49,22 @@ export default function CustomerPage() {
 
     fetchTasks();
   }, [selectedEmployee]);
+
   const handleAddTask = async () => {
     if (!selectedEmployee) {
       alert("Please select an employee before adding a task!");
       return;
     }
-    if (taskName.trim() === "") {
-      alert("Task name cannot be empty!");
-      return;
-    }
-    if (dueDate.trim() === "") {
-      alert("Due date cannot be empty!");
+    if (taskname.trim() === "" || duedate.trim() === "") {
+      alert("Task name and due date cannot be empty!");
       return;
     }
 
     const newTask = {
-      employee: selectedEmployee.lname,
-      taskName: taskName,
-      dueDate: dueDate,
+      taskname,
+      employeeid: selectedEmployee.employeeid,
+      // clientid: selectedEmployee.clientid,
+      duedate,
       status: "Pending",
     };
 
@@ -77,23 +76,17 @@ export default function CustomerPage() {
         },
         body: JSON.stringify(newTask),
       });
-
       if (!response.ok) {
         throw new Error("Failed to add task");
       }
-
-      setTasks([...tasks, newTask]);
+      const addedTask = await response.json();
+      setTasks([...tasks, addedTask]);
       setTaskName("");
       setDueDate("");
     } catch (error) {
       console.error("Error adding task:", error);
+      alert("Failed to add task");
     }
-  };
-
-  const handleTaskStatusChange = (index, newStatus) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index].status = newStatus;
-    setTasks(updatedTasks);
   };
 
   const handleLogout = () => {
@@ -101,17 +94,37 @@ export default function CustomerPage() {
       alert("Please clear all tasks before logging out!");
       return;
     }
-    window.location.href = "../login";
+    window.location.href = "/app/login";
   };
 
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === "All") return true;
-    return task.status === filter;
-  });
+  const handleTaskStatusChange = async (taskid, newStatus) => {
+    try {
+      const response = await fetch(
+        `../api/updatetask?taskid=${taskid}&status=${newStatus}`,
+        {
+          method: "PUT",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update task status");
+      }
+      const updatedTask = await response.json();
+      setTasks(
+        tasks.map((task) => (task.taskid === taskid ? updatedTask : task))
+      );
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      alert("Failed to update task status");
+    }
+  };
+
+  const filteredTasks = Array.isArray(tasks)
+    ? tasks.filter((task) => filter === "All" || task.status === filter)
+    : [];
 
   return (
     <div className="wrapper">
-      <NavBar/>
+      <NavBar />
       {!selectedEmployee ? (
         <div className="employee-list">
           <h3>Select an Employee</h3>
@@ -159,13 +172,13 @@ export default function CustomerPage() {
               type="text"
               placeholder="Add a new task"
               className="input"
-              value={taskName}
+              value={taskname}
               onChange={(e) => setTaskName(e.target.value)}
             />
             <input
               type="date"
               className="input"
-              value={dueDate}
+              value={duedate}
               onChange={(e) => setDueDate(e.target.value)}
             />
             <button onClick={handleAddTask} className="add-button">
@@ -188,10 +201,10 @@ export default function CustomerPage() {
                 Pending
               </span>
               <span
-                className={filter === "Completed" ? "active" : ""}
-                onClick={() => setFilter("Completed")}
+                className={filter === "Complete" ? "active" : ""}
+                onClick={() => setFilter("Complete")}
               >
-                Completed
+                Complete
               </span>
             </div>
             <button
@@ -199,29 +212,34 @@ export default function CustomerPage() {
               disabled={tasks.length > 0}
               className="logout-button"
             >
-              <a href="../login" className="logout-link">
+              <a href="/login" className="logout-link">
                 Log Out
               </a>
             </button>
           </div>
 
           <ul className="task-box">
-            {filteredTasks.map((task, index) => (
-              <li key={index} className="task-item">
-                <span className="task-name">{task.taskName}</span>
+            {filteredTasks.map((task) => (
+              <li key={task.taskid} className="task-item">
+                <span className="task-name">{task.taskname}</span>
                 <span className="task-status">{task.status}</span>
-                <span className="task-due-date">{task.dueDate}</span>
+                <span className="task-due-date">{task.duedate}</span>
+                <span className="task-employee">
+                  Assigned to: {selectedEmployee.lname}
+                </span>
                 <button
-                  onClick={() => handleTaskStatusChange(index, "Pending")}
+                  onClick={() => handleTaskStatusChange(task.taskid, "Pending")}
                   className="status-button"
                 >
                   Pending
                 </button>
                 <button
-                  onClick={() => handleTaskStatusChange(index, "Completed")}
+                  onClick={() =>
+                    handleTaskStatusChange(task.taskid, "Complete")
+                  }
                   className="status-button"
                 >
-                  Completed
+                  Complete
                 </button>
               </li>
             ))}

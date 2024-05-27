@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import "./employee.css";
-import NavBar from "../../components/NavBar"
+import NavBar from "../../components/NavBar";
 
 export default function EmployeePage() {
   const [tasks, setTasks] = useState([]);
@@ -12,11 +12,25 @@ export default function EmployeePage() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch("/api/tasks");
+        const response = await fetch("/api/task");
+        if (!response.ok) {
+          throw new Error("Failed to fetch tasks");
+        }
         const data = await response.json();
-        setEmployeeTasks(data);
+        if (!Array.isArray(data)) {
+          throw new Error("API response is not an array");
+        }
+        const tasksByEmployee = data.reduce((acc, task) => {
+          const employeeName = task.employeeName;
+          if (!acc[employeeName]) {
+            acc[employeeName] = [];
+          }
+          acc[employeeName].push(task);
+          return acc;
+        }, {});
+        setEmployeeTasks(tasksByEmployee);
       } catch (error) {
-        console.error("Failed to fetch tasks:", error);
+        console.error("Error fetching tasks:", error);
       }
     };
 
@@ -28,7 +42,7 @@ export default function EmployeePage() {
     setTasks(employeeTasks[employeeName] || []);
   };
 
-  const handleTaskStatusChange = (taskId, newStatus) => {
+  const handleTaskStatusChange = async (taskId, newStatus) => {
     const updatedTasks = tasks.map((task) =>
       task.taskID === taskId ? { ...task, status: newStatus } : task
     );
@@ -37,11 +51,26 @@ export default function EmployeePage() {
       ...employeeTasks,
       [selectedEmployee]: updatedTasks,
     });
+
+    try {
+      const response = await fetch(`../api/task/${taskId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update task status");
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
   };
 
   return (
     <div className="wrapper">
-      <NavBar/>
+      <NavBar />
       <h2 style={{ marginBottom: "20px" }}>Tasks</h2>
       <div className="employee-selector">
         <select onChange={(e) => handleEmployeeChange(e.target.value)}>

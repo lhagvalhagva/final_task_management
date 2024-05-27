@@ -7,17 +7,6 @@ CREATE TABLE clients (
 );
 
 
-CREATE TABLE employeeprojects (
-  employeeID INT ,
-  projectID INT ,
-  logRecord VARCHAR(2000) ,
-  workedHours INT ,
-  PRIMARY KEY (employeeID, projectID),
-  CONSTRAINT employee_fk FOREIGN KEY (employeeID) REFERENCES employees (employeeID) ON UPDATE CASCADE,
-  CONSTRAINT project_fk FOREIGN KEY (projectID) REFERENCES projects (projectID) ON UPDATE CASCADE
-);
-
-
 CREATE TABLE employees (
   employeeID SERIAL PRIMARY KEY,
   email VARCHAR(45)  UNIQUE,
@@ -27,15 +16,6 @@ CREATE TABLE employees (
   phoneNo CHAR(8)  UNIQUE,
   password VARCHAR(20)
 );
-
-CREATE TABLE projects (
-  projectID SERIAL PRIMARY KEY,
-  projectName VARCHAR(45)  UNIQUE,
-  budget INT ,
-  startDate DATE ,
-  endDate DATE 
-);
-
 
 
 CREATE TABLE taskassignment (

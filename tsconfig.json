@@ -24,7 +24,8 @@
     "**/*.ts",
     "**/*.tsx",
     "app/api/tasks.js",
-    "app/api/tasks/route.js"
+    "app/api/tasks/route.js",
+    "app/api/addtask/route.js"
   ],
   "exclude": ["node_modules"]
 }
